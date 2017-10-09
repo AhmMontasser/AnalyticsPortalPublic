@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Data Analysis V1.0</title>
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+   
+	<script src='https://code.jquery.com/jquery-3.2.1.min.js'></script>
+	<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js'></script>
+  </head>
+
+  <body>
+
+    <div class="container-fluid">
+     <div class="header" style="margin-bottom:70px;margin-right:40px;">
+        <nav>
+          <ul class="nav nav-pills pull-right">
+            <li class="dropdown">
+                <a href="#" data-toggle="dropdown" class="dropdown-toggle">Indices<b class="caret"></b></a>
+                <ul class="dropdown-menu">SS
+                    <li><a href="SectorIndices">Add new Index</a></li>
+                    <li><a href="AllSectors">Edit Index Stocks</a></li>
+                    <li class="divider"></li>
+                    <li><a href="GenerateIndices">Generate Indices Data</a></li>
+                </ul>
+              </li>
+			  <li class="dropdown">
+                <a href="#" data-toggle="dropdown" class="dropdown-toggle">Performance<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li><a href="/SectorPerformance">Sector indices performance</a></li>
+                    <li><a href="/StockPerformance">Stocks performance</a></li>
+                </ul>
+              </li>
+			<li role="presentation" ><a href="DataComposition">Data Composition</a></li>
+			  
+			  
+			  
+          </ul>
+        </nav>
+        <h3 class="text-muted">Sector Indices Creator</h3>
+      </div>
+	  
+	  <div class="row">
+	  <div class="col-md-10 col-md-offset-1">
+			
+			<form action="/AllSectors" method="POST">
+				<table id="example" class="display" cellspacing="0" width="100%">
+				
+				
+				
+					<thead>
+						<tr>
+							{% for column in sectors %}
+							<th>{{column}}</th>   
+							{% endfor %}
+						</tr>
+					</thead>
+					<tbody id='body'>
+						{% for key,value in sectors.iterrows() %}
+						<tr> 
+							{% for column in sectors %}
+								{% if value[column] != 0 %}
+									<td ><input class="stock" type='text' name='{{column}}' value="{{value[column]}}"/><input type="button" id="more_fields" onclick="deleteItem(this);" value="X" /></td> 
+								
+								{% else %}
+									<td></td>
+								{%endif %}
+							{% endfor %}
+						</tr>
+						{% endfor %}
+						
+						
+						
+					</tbody>
+				
+			
+				</table>
+				<input type="button" id="more_fields" onclick="add_fields(this);" value="Add Stocks" /></td>
+					
+				<div class="row">
+					<div class="col-md-2 col-md-offset-5">
+						<input type="submit" value="Save indices">
+					</div>
+				</div>
+			</form>
+		</div>
+    </div>
+    
+
+	
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs-3.3.7/jq-3.2.1/jq-3.2.1/dt-1.10.16/sl-1.2.3/datatables.min.css"/>
+ <script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js"></script>
+
+	<script>
+		$(document).ready(function() {
+			$('#example').DataTable({
+"bSort": false,
+"iDisplayLength":100
+});
+		} );
+		function deleteItem(element)
+		{
+			console.log(element);
+			element.parentNode.removeChild(element.parentNode.childNodes[0]);
+			element.parentNode.removeChild(element.parentNode.childNodes[0]);
+		}
+		console.log({{data}});
+		function add_fields(element) {
+			var newspan = document.createElement('div');
+			newspan.classList.add("row");
+			document.getElementById('more_fields').parentNode.removeChild(document.getElementById('more_fields'));
+			newspan.innerHTML = "<input type='text' name='SectorStocks'><input type='button' id='more_fields' onclick='add_fields();' value='Add Stocks' />";
+			//document.getElementById('more_fields').appendTo(newspan);
+			document.getElementById('wrapper').appendChild(newspan);
+			
+		}
+		function add_fields(element,name) {
+			var newspan = document.createElement('tr');
+			var string='<tr>';
+			{% for column in sectors %}
+				string+='<td ><input class="stock" type="text" name="{{column}}" /><input type="button" id="more_fields" onclick="deleteItem(this);" value="X" /></td> ';
+			{% endfor %}
+			string+='</tr>';
+			newspan.innerHTML=string;
+			//document.getElementById('more_fields').parentNode.removeChild(document.getElementById('more_fields'));
+			//document.getElementById('more_fields').appendTo(newspan);
+			document.getElementById('body').appendChild(newspan);
+			
+		}
+		/*$(".do").click(function () {
+			$("table").each(function () {
+				var $this = $(this);
+				var newrows = [];
+				$this.find("tr").each(function () {
+					var i = 0;
+					$(this).find("td,th").each(function () {
+						i++;
+						if (newrows[i] === undefined) {
+							newrows[i] = $("<tr></tr>");
+						}
+						newrows[i].append($(this));
+					});
+					console.log(newrows);
+				});
+				$this.find("tr").remove();
+				
+				$.each(newrows, function () {
+					$this.append(this);
+				});
+			});
+
+			return false;
+		});*/
+	</script>
+    
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+

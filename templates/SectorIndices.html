@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Data Analysis V1.0</title>
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+   
+	<script src='https://code.jquery.com/jquery-3.2.1.min.js'></script>
+	<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js'></script>
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="header" style="margin-bottom:40px;">
+        <nav>
+          <ul class="nav nav-pills pull-right">
+            <li class="dropdown">
+                <a href="#" data-toggle="dropdown" class="dropdown-toggle">Indices<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li><a href="SectorIndices">Add new Index</a></li>
+                    <li><a href="AllSectors">Edit Index Stocks</a></li>
+                    <li class="divider"></li>
+                    <li><a href="GenerateIndices">Generate Indices Data</a></li>
+                </ul>
+              </li>
+			  <li class="dropdown">
+                <a href="#" data-toggle="dropdown" class="dropdown-toggle">Performance<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li><a href="/SectorPerformance">Sector indices performance</a></li>
+                    <li><a href="/StockPerformance">Stocks performance</a></li>
+                </ul>
+              </li>
+			<li role="presentation" ><a href="DataComposition">Data Composition</a></li>
+			  
+			  
+			  
+          </ul>
+        </nav>
+        <h3 class="text-muted">Sector Indices Creator</h3>
+      </div>
+	  
+	  <div class="row">
+	  <div class="col-md-6 col-md-offset-4">
+    <form action="/SectorIndices" method="POST">
+		<!--<div class="row">
+			<h3>choose date Range</h3>
+		</div>
+		<div class="row">
+			<input type="date" name="start_date">
+			<input type="date" name="end_date">
+		</div>-->
+		<div class="row">
+			<h3>Enter Index Name</h3>
+		</div>
+		<div class="row">
+			<input type="text" name="SectorName">
+		</div>
+		<div class="row">
+			<h3>Enter Stocks' Names</h3>
+			</div>
+		<div id='wrapper'>
+			<div class="row">
+				<input type="text" name="SectorStocks"><input type="button" id="more_fields" onclick="add_fields(this);" value="Add Stocks" />
+			</div>
+		</div>
+		<div class="row">
+			<input type="submit" value="Send">
+        </div>
+    </form>
+	</div>
+    </div>
+    
+	<script>
+		function add_fields(element) {
+			var newspan = document.createElement('div');
+			newspan.classList.add("row");
+			document.getElementById('more_fields').parentNode.removeChild(document.getElementById('more_fields'));
+			newspan.innerHTML = "<input type='text' name='SectorStocks'><input type='button' id='more_fields' onclick='add_fields();' value='Add Stocks' />";
+			//document.getElementById('more_fields').appendTo(newspan);
+			document.getElementById('wrapper').appendChild(newspan);
+			
+		}
+	</script>
+    
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
