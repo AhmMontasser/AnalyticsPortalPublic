@@ -13,11 +13,9 @@ import Package as PK
 import sys
 import DataComposition as tc
 import indexReader as ir 
-import bollinger_bands as bb
-
 
 app = Flask(__name__)
-path = '/home/pharos/Menna/Projects/data'
+
 
 
 
@@ -110,7 +108,7 @@ def SectorPerformance():
  
         
         ''' reading Index data base in indexData and  '''
-        indexFile = ir.readData(path + '/indexLiveUpdate.xlsx',2)
+        indexFile = ir.readData('/home/pharos/python_projects/data/indexLiveUpdate.xlsx',2)
         stocks = ir.readData('sectorIndices.xlsx',0)
         
         indexData=indexFile['.EGX30']
@@ -178,8 +176,8 @@ def StockPerformance():
 
         periods = {}        
         ''' reading Index data base in indexData and  '''
-        stocks = ir.readData(path+'/stockLiveUpdate.xlsx',2)
-        indexFile = ir.readData(path+'/indexLiveUpdate.xlsx',2)
+        stocks = ir.readData('/home/pharos/python_projects/data/stockLiveUpdate.xlsx',2)
+        indexFile = ir.readData('/home/pharos/python_projects/data/indexLiveUpdate.xlsx',2)
         
         #print(indexFile)
         indexData=indexFile['.EGX30']
@@ -322,9 +320,9 @@ def GenerateIndices():
         #print(end)
         #sectorName = request.form['SectorName']
         #stocks = request.form.getlist('SectorStocks')
-        indexFile = PK.readDataDates(path + '/indexLiveUpdate.xlsx',2,start,end)
+        indexFile = PK.readDataDates('/home/pharos/python_projects/data/indexLiveUpdate.xlsx',2,start,end)
         
-        stocks = PK.readDataDates(path + '/stockLiveUpdate.xlsx',2,start,end)
+        stocks = PK.readDataDates('/home/pharos/python_projects/data/stockLiveUpdate.xlsx',2,start,end)
         indexData=indexFile['.EGX30']
         #print(indexData)
         dates=pd.DataFrame(indexData['Timestamp']) 
@@ -350,51 +348,6 @@ def GenerateIndices():
         return render_template("DataComposition.html")
         '''
         return render_template("GenerateIndices.html",done=1)
-
-
-
-
-
-
-
-
-
-
-
-
-@app.route("/bollinger_bands", methods=['POST','GET'])
-def BollingerBands():
-    if request.method == 'GET':
-        return render_template("bollinger_bands.html")
-    
-    else:
-        
-        checked=request.form['choice']
-        
-        
-        
-        
-        if (checked == "1"):
-            indexFile = PK.readData(path+'/stockLiveUpdate.xlsx',2)
-
-        elif (checked == "2"):
-            indexFile = PK.readData(path + '/stockLiveUpdateWeekly.xlsx',2)
-        
-        elif(checked == "3"):
-            indexFile = PK.readData(path + '/stockLiveUpdateMonthly.xlsx',2)
-
-       
-        
-        
-        
-        bb.BBW(indexFile)
-        bb.get_bollinger_band(indexFile,20,0,0)
-        bb.BBP(indexFile)
-        return render_template("bollinger_bands.html")
-    
-    
-
-
 
 
 
