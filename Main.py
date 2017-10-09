@@ -316,14 +316,26 @@ def GenerateIndices():
         
         start = request.form['start_date']
         end= request.form['end_date']
-        #print(start)
-        #print(end)
+        timeFrame= int(request.form['timeFrame'])
+        indexType= int(request.form['type'])
+        print(timeFrame)
+        print(end)
         #sectorName = request.form['SectorName']
         #stocks = request.form.getlist('SectorStocks')
-        indexFile = PK.readDataDates('/home/pharos/python_projects/data/indexLiveUpdate.xlsx',2,start,end)
-        
-        stocks = PK.readDataDates('/home/pharos/python_projects/data/stockLiveUpdate.xlsx',2,start,end)
-        indexData=indexFile['.EGX30']
+        if(timeFrame==1):
+            indexFile = PK.readDataDates('/home/pharos/python_projects/data/indexLiveUpdate.xlsx',2,start,end)
+            indexData=indexFile['.EGX30']
+            stocks = PK.readDataDates('/home/pharos/python_projects/data/stockLiveUpdate.xlsx',2,start,end)
+        elif(timeFrame==2):
+            indexFile = PK.readDataDates('/home/pharos/python_projects/data/indexLiveUpdateWeekly.xlsx',2,start,end)
+            indexData=indexFile['.EGX30']
+            stocks = PK.readDataDates('/home/pharos/python_projects/data/stockLiveUpdateWeekly.xlsx',2,start,end)
+        elif(timeFrame==3):
+            indexFile = PK.readDataDates('/home/pharos/python_projects/data/indexLiveUpdateMonthly.xlsx',2,start,end)
+            indexData=indexFile['.EGX30']
+            stocks = PK.readDataDates('/home/pharos/python_projects/data/stockLiveUpdateMonthly.xlsx',2,start,end)
+        else:
+            print(0)
         #print(indexData)
         dates=pd.DataFrame(indexData['Timestamp']) 
         writer = pd.ExcelWriter('sectorIndices.xlsx')
@@ -331,7 +343,7 @@ def GenerateIndices():
         sharesdata=cap['Sheet1'].copy()
         sharesdata['.EGX100']=sharesdata['.EGX100'].map(lambda x: x.replace('.CA',''))
         #print(sectors)
-        PK.getStockValue(sectors,stocks,dates,indexData,1,writer,sharesdata)
+        PK.getStockValue(sectors,stocks,dates,indexData,indexType,writer,sharesdata)
         writer.save()
         #print(stocks, file=sys.stderr)
         '''
