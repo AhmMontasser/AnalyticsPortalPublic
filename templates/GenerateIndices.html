@@ -46,8 +46,19 @@
 	  <div class="row">
 		  <div class="col-md-6 col-md-offset-4">
 			<form action="/GenerateIndices" method="POST">
-				<input type="date" name="start_date">
-				<input type="date" name="end_date">
+            <div class="row">
+            <label>TimeFrame</label>
+                <input type="radio" name="timeFrame" value="1">Daily
+                  <input type="radio" name="timeFrame" value="2">Weekly
+                  <input type="radio" name="timeFrame" value="3">Monthly
+              </div>
+              <div class="row">
+              <label> Indices Type </label>
+                  <input type="radio" name="type" value="1">Price Weighted
+                  <input type="radio" name="type" value="3">Market Cap weighted
+    		     </div> 
+              <input type="date" name="start_date">
+    			 <input type="date" name="end_date">
 				<input type="submit" name="my-form" value="Generate indices">
 				
 			</form>
