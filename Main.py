@@ -124,7 +124,8 @@ def SectorPerformance():
         dates=pd.DataFrame(indexData['Timestamp'])
         ir.minimizeStocks(dates,stocks) 
         dates=pd.DataFrame(periodsIndex['Timestamp'])
-        
+        print(periodsIndex)
+        print(stocks)
         
         
         
