@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from datetime import datetime, timedelta
-import sys
+#import sys
 import peakdetect as pDetect
 from plotly import tools
 import sys
@@ -195,12 +195,12 @@ def HighAndLow(indexPeeks,indexBottoms,indexData,stocks):
         del stocks[name]['stocks']
         highPeeksDates=mergeDates(highPeeks,stocks[name],'Timestamp')
         highPeeksDates = highPeeksDates.drop(['Trade Open','Trade Low','Trade Close'],axis=1)
-        print('------------')
-        print(highPeeksDates)
+        #print('------------')
+        #print(highPeeksDates)
         lowPeeksDates=mergeDates(lowPeeks,stocks[name],'Timestamp')
         lowPeeksDates = lowPeeksDates.drop(['Trade Open','Trade Close','Trade High'],axis=1)
-        print(';;;;;;;')
-        print(lowPeeksDates)
+        #print(';;;;;;;')
+        #print(lowPeeksDates)
         highPeeks = highPeeksDates.rename(columns = {'Trade High':name})
         lowPeeks = lowPeeksDates.rename(columns = {'Trade Low':name})
 
@@ -400,6 +400,7 @@ def stockProfitPeriod(periodsIndex,stocks,periods):
         if(index==0):
             start=row['Timestamp']
             startReal=periodsIndex.at[index,'real']
+            #print(startReal)
             startIndex=index
         else:
             end=row['Timestamp']
@@ -414,9 +415,11 @@ def stockProfitPeriod(periodsIndex,stocks,periods):
             columns = ['stock-profit','better']
             indexNames=stocks.keys()
             period= pd.DataFrame(index=indexNames, columns=columns)
+            #print(stocks)
             for stockName in stocks:
                 
-                #print(startReal)
+                
+                #print(stockName)
                 high=stocks[stockName].at[startReal,'Trade High']
                 low=stocks[stockName].at[startReal,'Trade Low']
                 #print(startReal)
