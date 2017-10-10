@@ -18,7 +18,7 @@ import bollinger_bands as bb
 app = Flask(__name__)
 
 
-path = '/home/pharos/Projects/data'
+path = '/home/pharos/python_projects/data'
 
 
 def readStocks(path,skiprows):
