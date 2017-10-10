@@ -274,11 +274,12 @@ def getStockValue(sectors,stocks,dates,indexData,indexType,writer,sharesdata):
               tempLow[stockName]=stock['Trade Low']
               tempOpen[stockName]=stock['Trade Open']
               tempHigh[stockName]=stock['Trade High']
-         
-        tempClose['totalPrice']=tempClose.sum(axis=1)
-        tempLow['totalPrice']=tempLow.sum(axis=1)
-        tempOpen['totalPrice']=tempOpen.sum(axis=1)
-        tempHigh['totalPrice']=tempHigh.sum(axis=1)
+        if(indexType!=2):          
+            tempClose['totalPrice']=tempClose.sum(axis=1)
+            tempLow['totalPrice']=tempLow.sum(axis=1)
+            tempOpen['totalPrice']=tempOpen.sum(axis=1)
+            tempHigh['totalPrice']=tempHigh.sum(axis=1)
+        
         if(indexType==3):
             tempCap['totalCap']=tempCap.sum(axis=1)
         #print(tempClose.iloc[-1, tempClose.columns.get_loc('totalPrice')])
@@ -301,6 +302,28 @@ def getStockValue(sectors,stocks,dates,indexData,indexType,writer,sharesdata):
             del index['Trade Close']
             del index['old Close']
             index['Trade Close']=close
+            index['stocks']=nameSTocks['stocks']
+        elif(indexType==2):
+            index=pd.DataFrame(dates['Timestamp'])
+            index['Trade open'] =0
+            index['Trade High'] =0
+            index['Trade Low'] =0
+            index['Trade Close'] =0
+            for column in tempClose:
+                
+                index['Trade open'] += tempOpen[column]/nSTocks
+                index['Trade High'] += tempHigh[column]/nSTocks
+                index['Trade Low'] += tempLow[column]/nSTocks
+                index['Trade Close'] += tempClose[column]/nSTocks
+            #index['Trade Close']=tempClose['totalPrice']
+            #index['old Close']=index['Trade Close']
+            #print(name)
+            #print(index.iloc[-1, index.columns.get_loc('Trade Close')])
+            index['Trade Close']=(index['Trade Close']/index.iloc[-1, index.columns.get_loc('Trade Close')])*indexStartClose
+            index['Trade Open']=(index['Trade Open']/index.iloc[-1, index.columns.get_loc('Trade Close')])*indexStartClose
+            index['Trade High']=(index['Trade Close']/index.iloc[-1, index.columns.get_loc('Trade Close')])*indexStartClose
+            index['Trade Low']=(index['Trade Close']/index.iloc[-1, index.columns.get_loc('Trade Close')])*indexStartClose
+            
             index['stocks']=nameSTocks['stocks']
         elif(indexType==3):
             
