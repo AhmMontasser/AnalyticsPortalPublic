@@ -18,7 +18,7 @@ import bollinger_bands as bb
 app = Flask(__name__)
 
 
-path = '/home/pharos/python_projects/data'
+path = '/home/pharos/Projects/data'
 
 
 def readStocks(path,skiprows):
@@ -109,7 +109,7 @@ def SectorPerformance():
  
         
         ''' reading Index data base in indexData and  '''
-        indexFile = ir.readDataTimeRange(path+'/stockLiveUpdate.xlsx',2,startDate,endDate)
+        indexFile = ir.readDataTimeRange(path+'/indexLiveUpdate.xlsx',2,startDate,endDate)
         stocks = ir.readDataTimeRange('sectorIndices.xlsx',0,startDate,endDate)
         
         indexData=indexFile['.EGX30']
@@ -220,16 +220,21 @@ def StockPerformance():
 @app.route("/SectorIndices", methods=['POST','GET'])
 def SectorIndices():
     if request.method == 'GET':
-        stocks = ir.readData('stockLiveUpdate.xlsx',2)
-        sectors = stocks.keys()
+        #stocks = ir.readData(path+'/stockLiveUpdate.xlsx',2)
+        xls = pd.ExcelFile(path+'/stockLiveUpdate.xlsx')
+        
+        sectors =  xls.sheet_names
+        print(sectors)
         return render_template("SectorIndices.html",sectors=sectors)
     
     else:
         #startDate = request.form['start_date']
         #endDate = request.form['end_date']
+        sectors = readStocks('sectorStocks.xlsx',0)
+        writer = pd.ExcelWriter('sectorStocks.xlsx')  
         sectorName = request.form['SectorName']
         #stocks = request.form.getlist('SectorStocks')
-        sectors={}
+        #sectors={}
         temp = pd.DataFrame({'stocks':request.form.getlist('SectorStocks')})
         sectors[sectorName]=temp
         writer = pd.ExcelWriter('sectorStocks.xlsx')  
