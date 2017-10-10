@@ -28,6 +28,21 @@ def readData(path,skiprows):
            stocks[sh]=stocks[sh].iloc[::-1]
            #print(stocks[sh]['Timestamp'])
    return stocks
+def readDataTimeRange(path,skiprows,start,end):
+   parse_date = lambda x: x.strftime('%Y/%m/%d')
+   xls = pd.ExcelFile(path)
+   stocks={}
+   for sh in xls.sheet_names:
+       if(sh!='Sheet'):
+           stocks[sh]=pd.read_excel(xls,sh, index_col=None,skiprows=skiprows, converters={'Timestamp':parse_date})
+           #print(stocks[sh]['Timestamp'])
+           stocks[sh]['Timestamp']  = pd.to_datetime(stocks[sh]['Timestamp'])
+           #print(stocks[sh]['Timestamp'])
+           stocks[sh] = stocks[sh].loc[(stocks[sh]['Timestamp'] > start) & (stocks[sh]['Timestamp'] < end)]
+           stocks[sh] = stocks[sh].reset_index(drop=True)
+           stocks[sh]=stocks[sh].iloc[::-1]
+           #print(stocks[sh]['Timestamp'])
+   return stocks
 def readStockNamesFile(path):
     xls = pd.ExcelFile(path)
     stockNames3=pd.read_excel(xls,'Sheet1', index_col=None)
@@ -192,7 +207,8 @@ def HighAndLow(indexPeeks,indexBottoms,indexData,stocks):
     
     
     for name in stocks:
-        del stocks[name]['stocks']
+        if('stocks' in stocks[name].columns):
+            del stocks[name]['stocks']
         highPeeksDates=mergeDates(highPeeks,stocks[name],'Timestamp')
         highPeeksDates = highPeeksDates.drop(['Trade Open','Trade Low','Trade Close'],axis=1)
         #print('------------')

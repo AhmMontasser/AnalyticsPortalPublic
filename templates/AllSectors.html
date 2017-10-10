@@ -16,7 +16,7 @@
           <ul class="nav nav-pills pull-right">
             <li class="dropdown">
                 <a href="#" data-toggle="dropdown" class="dropdown-toggle">Indices<b class="caret"></b></a>
-                <ul class="dropdown-menu">SS
+                <ul class="dropdown-menu">
                     <li><a href="SectorIndices">Add new Index</a></li>
                     <li><a href="AllSectors">Edit Index Stocks</a></li>
                     <li class="divider"></li>
@@ -31,6 +31,7 @@
                 </ul>
               </li>
 			<li role="presentation" ><a href="DataComposition">Data Composition</a></li>
+             <li role="presentation" ><a href="bollinger_bands">Bollinger Bands</a></li>
 			  
 			  
 			  
@@ -50,7 +51,7 @@
 					<thead>
 						<tr>
 							{% for column in sectors %}
-							<th>{{column}}</th>   
+							<th class="{{column}}">{{column}}<input type="button" id="more_fields" onclick="deleteIndex('{{column}}');" value="X" /></th>   
 							{% endfor %}
 						</tr>
 					</thead>
@@ -59,10 +60,10 @@
 						<tr> 
 							{% for column in sectors %}
 								{% if value[column] != 0 %}
-									<td ><input class="stock" type='text' name='{{column}}' value="{{value[column]}}"/><input type="button" id="more_fields" onclick="deleteItem(this);" value="X" /></td> 
+									<td class="{{column}}"><input class="stock" type='text' name='{{column}}' value="{{value[column]}}"/><input type="button" id="more_fields" onclick="deleteItem(this);" value="X" /></td> 
 								
 								{% else %}
-									<td></td>
+									<td class="{{column}}"></td>
 								{%endif %}
 							{% endfor %}
 						</tr>
@@ -98,6 +99,18 @@
 "iDisplayLength":100
 });
 		} );
+        function deleteIndex(name)
+		{
+			var paras = document.getElementsByClassName(name);
+            console.log(paras.length);
+            while(paras.length>0) 
+            {
+                    console.log(paras[0]);
+                    paras[0].parentNode.removeChild(paras[0]);
+                    }
+                
+		}
+
 		function deleteItem(element)
 		{
 			console.log(element);

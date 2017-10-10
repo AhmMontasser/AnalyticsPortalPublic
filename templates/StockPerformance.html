@@ -30,6 +30,7 @@
                 </ul>
               </li>
 			<li role="presentation" ><a href="DataComposition">Data Composition</a></li>
+             <li role="presentation" ><a href="bollinger_bands">Bollinger Bands</a></li>
 			  
 			  
 			  
@@ -78,7 +79,7 @@
 			var newspan = document.createElement('div');
 			newspan.classList.add("row");
 			document.getElementById('more_fields').parentNode.removeChild(document.getElementById('more_fields'));
-			newspan.innerHTML = "<input list='stocks' name='stock'><input type='button' id='more_fields' onclick='add_fields();' value='Add Stocks' />";
+			newspan.innerHTML = "<input list='stocks' name='names'><input type='button' id='more_fields' onclick='add_fields();' value='Add Stocks' />";
 			//document.getElementById('more_fields').appendTo(newspan);
 			document.getElementById('wrapper').appendChild(newspan);
 			

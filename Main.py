@@ -18,7 +18,7 @@ import bollinger_bands as bb
 app = Flask(__name__)
 
 
-path = '/home/pharos/Menna/Projects/data'
+path = '/home/pharos/python_projects/data'
 
 
 def readStocks(path,skiprows):
@@ -109,12 +109,12 @@ def SectorPerformance():
  
         
         ''' reading Index data base in indexData and  '''
-        indexFile = ir.readData(path + '/indexLiveUpdate.xlsx',2)
-        stocks = ir.readData('sectorIndices.xlsx',0)
+        indexFile = ir.readDataTimeRange(path+'/stockLiveUpdate.xlsx',2,startDate,endDate)
+        stocks = ir.readDataTimeRange('sectorIndices.xlsx',0,startDate,endDate)
         
         indexData=indexFile['.EGX30']
         del indexData['Trade Volume']
-        indexData = indexData[(indexData['Timestamp'] > startDate) & (indexData['Timestamp'] <= endDate)]
+        #indexData = indexData[(indexData['Timestamp'] > startDate) & (indexData['Timestamp'] <= endDate)]
         
         stocks = {key: stocks[key] for key in stocks if key in names}
         
@@ -166,7 +166,7 @@ def SectorPerformance():
 @app.route("/StockPerformance", methods=['POST','GET'])
 def StockPerformance():
     if request.method == 'GET':
-        stocks = ir.readData('stockLiveUpdate.xlsx',2)
+        stocks = ir.readData(path+'/stockLiveUpdate.xlsx',2)
         sectors = stocks.keys()
         return render_template("StockPerformance.html",sectors=sectors)
     
@@ -178,12 +178,13 @@ def StockPerformance():
 
         periods = {}        
         ''' reading Index data base in indexData and  '''
-        stocks = ir.readData(path+'/stockLiveUpdate.xlsx',2)
-        indexFile = ir.readData(path+'/indexLiveUpdate.xlsx',2)
+        stocks = ir.readDataTimeRange(path+'/stockLiveUpdate.xlsx',2,startDate,endDate)
+        indexFile = ir.readDataTimeRange(path+'/indexLiveUpdate.xlsx',2,startDate,endDate)
         
         #print(indexFile)
         indexData=indexFile['.EGX30']
-        indexData = indexData[(indexData['Timestamp'] > startDate) & (indexData['Timestamp'] <= endDate)]
+        del indexData['Trade Volume']
+        #indexData = indexData[(indexData['Timestamp'] > startDate) & (indexData['Timestamp'] <= endDate)]
         stocks = {key: stocks[key] for key in stocks if key  in names}
         #indexStart=(indexData['Trade Close']/index.iloc[-1, index.columns.get_loc('Trade Close')])*indexStartClose
         #Getting desired peeks and bottoms  
@@ -219,13 +220,16 @@ def StockPerformance():
 @app.route("/SectorIndices", methods=['POST','GET'])
 def SectorIndices():
     if request.method == 'GET':
-        return render_template("SectorIndices.html")
+        stocks = ir.readData('stockLiveUpdate.xlsx',2)
+        sectors = stocks.keys()
+        return render_template("SectorIndices.html",sectors=sectors)
     
     else:
         #startDate = request.form['start_date']
         #endDate = request.form['end_date']
         sectorName = request.form['SectorName']
         #stocks = request.form.getlist('SectorStocks')
+        sectors={}
         temp = pd.DataFrame({'stocks':request.form.getlist('SectorStocks')})
         sectors[sectorName]=temp
         writer = pd.ExcelWriter('sectorStocks.xlsx')  
@@ -270,11 +274,12 @@ def AllSectors():
         
         writer = pd.ExcelWriter('sectorStocks.xlsx')  
         for name in sectors:
-            temp = pd.DataFrame({'stocks':request.form.getlist(name)})
-            #temp.rename('0':'stocks')
-            sectors2[name]=temp
-            print(request.form.getlist(name))
-            sectors2[name].to_excel(writer,name)
+            if(len(request.form.getlist(name))>0):
+                temp = pd.DataFrame({'stocks':request.form.getlist(name)})
+                #temp.rename('0':'stocks')
+                sectors2[name]=temp
+                print(request.form.getlist(name))
+                sectors2[name].to_excel(writer,name)
         writer.save() 
         sectors = readStocks('sectorStocks.xlsx',0)
         larger=0
